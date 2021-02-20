@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arllain.scopedstorageimagegallery.databinding.ItemImageBinding
 import com.arllain.scopedstorageimagegallery.model.Image
-import com.bumptech.glide.Glide
-import com.bumptech.glide.signature.ObjectKey
 
 class ImageAdapter(): ListAdapter<Image, ImageAdapter.MyViewHolder>(MyDiff()) {
 
@@ -24,10 +22,6 @@ class ImageAdapter(): ListAdapter<Image, ImageAdapter.MyViewHolder>(MyDiff()) {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val imageToBind = getItem(position)
         holder.bind(imageToBind)
-        Glide.with(holder.image.context)
-            .load(imageToBind.uri)
-            .signature(ObjectKey(imageToBind.date))
-            .into(holder.image)
     }
 
     inner class MyViewHolder(private val binding: ItemImageBinding ): RecyclerView.ViewHolder(binding.root){

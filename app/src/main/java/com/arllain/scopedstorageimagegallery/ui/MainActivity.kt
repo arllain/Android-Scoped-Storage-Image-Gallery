@@ -3,14 +3,12 @@ package com.arllain.scopedstorageimagegallery.ui
 import android.Manifest
 import android.content.ContentUris
 import android.content.pm.PackageManager
-import android.graphics.Rect
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,20 +35,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         requestPermission()
-        initUi()
-        loadImages()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun initUi() {
@@ -60,17 +44,7 @@ class MainActivity : AppCompatActivity() {
             rvImages.adapter = imageAdapter
             setHasFixedSize(true)
             setPadding(spacing, spacing, spacing, spacing)
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(rect: Rect,
-                                            view: View,
-                                            parent: RecyclerView,
-                                            state: RecyclerView.State) {
-                    rect.set(spacing, spacing, spacing, spacing)
-                }
-            })
-
-            layoutManager = GridLayoutManager(this.context,
-                2)
+            layoutManager = GridLayoutManager(this.context,2)
         }
     }
 
@@ -97,7 +71,8 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
         }else {
             Toast.makeText(this, "Permission allowed", Toast.LENGTH_SHORT).show()
-
+            initUi()
+            loadImages()
         }
     }
 
