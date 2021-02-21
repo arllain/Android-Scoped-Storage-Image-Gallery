@@ -2,11 +2,10 @@ package com.arllain.scopedstorageimagegallery.ui
 
 import android.Manifest
 import android.content.ContentUris
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -21,13 +20,20 @@ private const val REQUEST_PERMISSION_MEDIA_ACCESS = 100
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
-    private var permissionDenied = false
-    private val imageAdapter by lazy {
-        ImageAdapter()
+    companion object {
+        const val MAIN_ACTIVITY_IMAGE_EXTRA_ID = "image"
+        const val MAIN_ACTIVITY_DETAILS_REQUEST_CODE  = 1
     }
 
+    private lateinit var binding: ActivityMainBinding
+
+    private val imageAdapter by lazy {
+        ImageAdapter { clickedImage ->
+            val viewImageIntent = Intent(this@MainActivity, ImageDetailsActivity::class.java)
+            viewImageIntent.putExtra(MAIN_ACTIVITY_IMAGE_EXTRA_ID, clickedImage)
+            startActivityForResult(viewImageIntent, MAIN_ACTIVITY_DETAILS_REQUEST_CODE)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,12 +87,7 @@ class MainActivity : AppCompatActivity() {
         val imageList = mutableListOf<Image>()
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.RELATIVE_PATH,
             MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media.MIME_TYPE,
-            MediaStore.Images.Media.WIDTH,
-            MediaStore.Images.Media.HEIGHT,
             MediaStore.Images.Media.DATE_MODIFIED
         )
 
@@ -101,8 +102,6 @@ class MainActivity : AppCompatActivity() {
         )?.use { cursor ->
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-                val path =
-                    cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.RELATIVE_PATH))
                 val name =
                     cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
                 val date =

@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arllain.scopedstorageimagegallery.databinding.ItemImageBinding
 import com.arllain.scopedstorageimagegallery.model.Image
 
-class ImageAdapter(): ListAdapter<Image, ImageAdapter.MyViewHolder>(MyDiff()) {
+class ImageAdapter(
+    val clickAction: (Image) -> Unit
+): ListAdapter<Image, ImageAdapter.MyViewHolder>(MyDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemImageBinding.inflate(
@@ -22,6 +24,10 @@ class ImageAdapter(): ListAdapter<Image, ImageAdapter.MyViewHolder>(MyDiff()) {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val imageToBind = getItem(position)
         holder.bind(imageToBind)
+
+        holder.image.setOnClickListener {
+            clickAction(imageToBind)
+        }
     }
 
     inner class MyViewHolder(private val binding: ItemImageBinding ): RecyclerView.ViewHolder(binding.root){
