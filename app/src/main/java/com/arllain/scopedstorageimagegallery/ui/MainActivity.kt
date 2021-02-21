@@ -1,6 +1,7 @@
 package com.arllain.scopedstorageimagegallery.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -117,4 +118,12 @@ class MainActivity : AppCompatActivity() {
 
         return imageList
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            loadImages()
+        }
+    }
+
 }
